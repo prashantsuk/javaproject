@@ -22,6 +22,8 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '8'
+          distribution: 'adoptopenjdk'  # Specify AdoptOpenJDK as the distribution
+          cache: 'maven'  # Optionally cache Maven dependencies
 
       - name: Install dependencies and build with Maven
         run: |
@@ -35,3 +37,5 @@ jobs:
         run: |
           docker run --name my-java-container -d my-java-app
           docker logs my-java-container  # Show logs to verify the output
+
+     
