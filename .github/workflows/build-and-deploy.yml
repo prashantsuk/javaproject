@@ -1,0 +1,37 @@
+# File: .github/workflows/build-and-deploy.yml
+
+name: Build and Deploy Java Application with Docker
+
+on:
+  push:
+    branches:
+      - main  # Trigger workflow on push to main branch
+  pull_request:
+    branches:
+      - main  # Trigger workflow on pull request to main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+    
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+
+      - name: Install dependencies and build with Maven
+        run: |
+          mvn clean install  # Maven build command
+
+      - name: Build Docker image
+        run: |
+          docker build -t my-java-app .  # Build Docker image using Dockerfile
+
+      - name: Run Docker container (Test)
+        run: |
+          docker run --name my-java-container -d my-java-app
+          docker logs my-java-container  # Show logs to verify the output
