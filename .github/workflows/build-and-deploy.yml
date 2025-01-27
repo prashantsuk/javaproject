@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '8'
-          distribution: 'adoptopenjdk'  # Specify AdoptOpenJDK as the distribution
+          distribution: 'adoptium'  # Use the Adoptium distribution for JDK 8
           cache: 'maven'  # Optionally cache Maven dependencies
 
       - name: Install dependencies and build with Maven
@@ -38,4 +38,9 @@ jobs:
           docker run --name my-java-container -d my-java-app
           docker logs my-java-container  # Show logs to verify the output
 
-     
+      - name: Push Docker image to Docker Hub (optional)
+        if: github.ref == 'refs/heads/main'  # Only push when on main branch
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker tag my-java-app ${{ secrets.DOCKER_USERNAME }}/my-java-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-java-app:latest
